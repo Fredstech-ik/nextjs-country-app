@@ -2,10 +2,14 @@ import { notFound } from "next/navigation";
 import Image from "next/image";
 
 interface Country {
-  name: { common: string };
+  name: {
+    common: string;
+  };
   population: number;
   area: number;
-  flags: { svg: string };
+  flags: {
+    svg: string;
+  };
 }
 
 export default async function CountryPage({
