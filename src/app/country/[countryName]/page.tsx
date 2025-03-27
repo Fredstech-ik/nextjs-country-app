@@ -2,21 +2,19 @@ import { notFound } from "next/navigation";
 import Image from "next/image";
 
 interface Country {
-  name: {
-    common: string;
-  };
+  name: { common: string };
   population: number;
   area: number;
-  flags: {
-    svg: string;
-  };
+  flags: { svg: string };
 }
 
 export default async function CountryPage({
   params,
 }: {
-  params: { countryName: string };
+  params: { countryName?: string };
 }) {
+  if (!params.countryName) return notFound();
+
   const countryName = decodeURIComponent(params.countryName);
 
   const res = await fetch(`https://restcountries.com/v3.1/name/${countryName}`);
