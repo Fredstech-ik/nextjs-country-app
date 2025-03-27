@@ -1,13 +1,25 @@
 "use client";
 import { useState, useEffect } from "react";
 import Link from "next/link";
+import Image from "next/image";
+
+interface Country {
+  name: {
+    common: string;
+  };
+  population: number;
+  area: number;
+  flags: {
+    svg: string;
+  };
+}
 
 export default function HomePage() {
-  const [countries, setCountries] = useState<any[]>([]);
+  const [countries, setCountries] = useState<Country[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [search, setSearch] = useState("");
-  const [selectedCountries, setSelectedCountries] = useState<any[]>([]);
+  const [selectedCountries, setSelectedCountries] = useState<Country[]>([]);
 
   useEffect(() => {
     fetch("https://restcountries.com/v3.1/all")
@@ -15,7 +27,7 @@ export default function HomePage() {
         if (!res.ok) throw new Error("Failed to fetch countries");
         return res.json();
       })
-      .then((data) => {
+      .then((data: Country[]) => {
         setCountries(data);
         setLoading(false);
       })
@@ -32,7 +44,7 @@ export default function HomePage() {
     country.name.common.toLowerCase().includes(search.toLowerCase())
   );
 
-  const toggleCountrySelection = (country: any) => {
+  const toggleCountrySelection = (country: Country) => {
     setSelectedCountries((prev) =>
       prev.find((c) => c.name.common === country.name.common)
         ? prev.filter((c) => c.name.common !== country.name.common)
@@ -66,10 +78,12 @@ export default function HomePage() {
             onClick={() => toggleCountrySelection(country)}
           >
             <Link href={`/country/${country.name.common}`}>
-              <img
+              <Image
                 src={country.flags.svg}
                 alt={country.name.common}
-                className="w-16 h-10 mx-auto mb-2"
+                width={64}
+                height={40}
+                className="mx-auto mb-2"
               />
               <h2 className="text-lg font-semibold">{country.name.common}</h2>
             </Link>
